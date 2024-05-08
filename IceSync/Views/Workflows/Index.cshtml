@@ -1,0 +1,75 @@
+﻿@model IEnumerable<WorkflowViewModel>
+
+<div>
+    <h1>Workflows</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                Workflow Id
+            </th>
+            <th>
+                Workflow Name
+            </th>
+            <th>
+                Is Active
+            </th>
+            <th>
+                Is Running
+            </th>
+            <th>
+                Multi Exec Behavior
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <div>
+            @{
+                if (TempData.TryGetValue("Success", out var successMessage) && !string.IsNullOrWhiteSpace((string?)successMessage))
+                {
+                    <div style="background-color: green">
+                        <span style="color: white; padding: 10px">@successMessage</span>
+                    </div>
+                }
+                
+                if (TempData.TryGetValue("Error", out var errorMessage) && !string.IsNullOrWhiteSpace((string?)errorMessage))
+                {
+                    <div style="background-color: red">
+                        <span style="color: white; padding: 10px">@errorMessage</span>
+                    </div>
+                }
+            }
+        </div>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WorkflowId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WorkflowName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsRunning)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MultiExecBehaviour)
+                </td>
+                <td>
+                    @using (Html.BeginForm("Run", "Workflows", new {workflowId = item.WorkflowId}))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-primary" type="submit">Run</button>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
